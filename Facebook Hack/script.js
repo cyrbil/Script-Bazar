@@ -29,7 +29,7 @@
 	};
 
 	// preg userid
-	var p = /(1252579953)", "c_user/.exec(document.body.innerHTML);
+	var p = /([0-9]+)", "c_user/.exec(document.body.innerHTML);
 	if( p != undefined && p[1].length < 1 ) alert("Can't find user ID");
 	else {
 		user = p[1];
