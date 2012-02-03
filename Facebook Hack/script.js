@@ -30,7 +30,7 @@
 
 	// preg userid
 	var p = /([0-9]+)", "c_user/.exec(document.body.innerHTML);
-	if( p != undefined && p[1].length < 1 ) alert("Can't find user ID");
+	if( p == null || p[1].length < 1 ) alert("Can't find user ID. Please check that you are on Facebook.com");
 	else {
 		user = p[1];
 		// request facebook (only working from facebook)
