@@ -1,6 +1,7 @@
 // COPYRIGHT CYRBIL 2012
 // usage: javascript: *this script*
 // 		  into your browser url in facebook.
+// or put this script in your browser console :)
 
 
 	// create xhr object
