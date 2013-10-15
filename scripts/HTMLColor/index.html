@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ColorPicker</title>
+
+    <style rel="stylesheet">
+        html, body {
+            padding: 0px;
+            margin: 0px;
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            min-height: 100%;
+            text-align: center;
+        }
+
+        body:before {
+            content: '';
+            display: inline-block;
+            height: 100%;
+            vertical-align: middle;
+            margin-right: -0.25em;
+        }
+        span {
+            font-family: helvetica;
+            font-size: 40px;
+
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <span>#......</span>
+    <script>
+        var d = false;
+        function mousedown(e) {
+            d = true;
+            e.preventDefault();
+            return false;
+        }
+        function mouseup(e) {
+            d = false;
+            return false;
+        }
+        var hsla = [0,0,50,1];
+        var rgba = [128,128,128,1];
+        function mousemove(e) {
+            var s = document.body.children[0];
+            var x = e.x || e.clientX || e.pageX || event.clientX || 0;
+            var y = e.y || e.clientY || e.pageY || event.clientY || 0;
+            var w = document.body.clientWidth;
+            var h = document.body.clientHeight;
+
+            hsla = (!d)?
+                [ 360*x/w, 100*y/h, hsla[2], hsla[3] ]:
+                [ hsla[0], hsla[1], 100*x/w, y/h     ];
+            
+            function hue_to_rgb(m1, m2, h){
+                if(h<0) h+=1;
+                if(h>1) h-=1;
+                if(h*6<1) return m1+(m2-m1)*h*6;
+                if(h*2<1) return m2;
+                if(h*3<2) return m1+(m2-m1)*(2/3-h)*6;
+                return m1;
+            }
+            vh=hsla[0]/360,vs=hsla[1]/100,vl=hsla[2]/100
+            m2=(vl<=0.5)?vl*(vs+1):vl+vs-vl*vs;
+            m1=vl*2-m2;
+            rgba= [
+                hue_to_rgb(m1, m2, vh+1/3)*255,
+                hue_to_rgb(m1, m2, vh    )*255,
+                hue_to_rgb(m1, m2, vh-1/3)*255,
+                hsla[3]
+            ];
+            function toHex(i) { return (Math.round(i)+0x100).toString(16).substr(-2); }
+            
+            s.innerHTML = "rgba("+rgba[0].toFixed(2)+", "+rgba[1].toFixed(2)+", "+rgba[2].toFixed(2)+", "+rgba[3].toFixed(2)+")";
+            s.innerHTML += " = #"+toHex(rgba[0])+toHex(rgba[1])+toHex(rgba[2]);
+            s.innerHTML += "<br />hsla("+hsla[0].toFixed(2)+"°, "+hsla[1].toFixed(2)+"%, "+hsla[2].toFixed(2)+"%, "+hsla[3].toFixed(2)+")";
+            document.body.style.backgroundColor = "hsla("+hsla[0]+","+hsla[1]+"%,"+hsla[2]+"%,"+hsla[3]+")";
+            console.log("hsla("+hsla[0]+","+hsla[1]+"%,"+hsla[2]+"%,"+hsla[3]+")");
+            s.style.color = (hsla[2]<50)?'white':'black';
+        }
+        var b = document.body;
+        if (b.addEventListener){
+            b.addEventListener('mousemove', mousemove, false);
+            b.addEventListener('mousedown', mousedown, false);
+            b.addEventListener('mouseup', mouseup, false);
+        } else if (b.attachEvent) {
+            b.attachEvent('onmousemove', mousemove);
+            b.attachEvent('mousedown', mousedown);
+            b.attachEvent('mouseup', mouseup);
+        } else {
+            alert("Uncompatible browser.");
+        }
+    </script>
+</body>
+</html>
